@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>3C 專門店</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #000;
+      color: #eee;
+      line-height: 1.6;
+    }
+    header {
+      background: #111;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      letter-spacing: 2px;
+      border-bottom: 2px solid #444;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      background: #222;
+    }
+    nav a {
+      color: #eee;
+      padding: 14px 20px;
+      text-decoration: none;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    nav a:hover {
+      background: #444;
+      color: #fff;
+    }
+    section {
+      display: none;
+      padding: 40px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.8s;
+    }
+    section.active {
+      display: block;
+      opacity: 1;
+    }
+    footer {
+      background: #111;
+      padding: 20px;
+      text-align: center;
+      border-top: 2px solid #444;
+      font-size: 14px;
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 80%;
+    }
+    th, td {
+      border: 1px solid #666;
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background: #222;
+    }
+    .product-card {
+      display: inline-block;
+      background: #111;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 12px;
+      transition: transform 0.3s;
+      width: 200px;
+    }
+    .product-card:hover {
+      transform: scale(1.05);
+      background: #1c1c1c;
+    }
+    .product-card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #444;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #666;
+    }
+  </style>
+</head>
+<body>
+  <header>3C 專門店</header>
+  <nav>
+    <a data-page="home">首頁</a>
+    <a data-page="products">產品</a>
+    <a data-page="about">關於我們</a>
+    <a data-page="contact">聯絡我們</a>
+  </nav>
+
+  <!-- 首頁 -->
+  <section id="home" class="active">
+    <h1>歡迎來到 3C 專門店</h1>
+    <p>最新科技、專業服務，盡在這裡。</p>
+    <img src="https://via.placeholder.com/800x300" alt="Banner" style="border-radius:10px;">
+  </section>
+
+  <!-- 產品頁 -->
+  <section id="products">
+    <h2>熱門產品</h2>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/200" alt="Laptop">
+      <h3>高效能筆電</h3>
+      <p>$35,000</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/200" alt="Smartphone">
+      <h3>旗艦智慧手機</h3>
+      <p>$28,000</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/200" alt="Headphones">
+      <h3>無線耳機</h3>
+      <p>$4,500</p>
+    </div>
+
+    <h2>產品比較表</h2>
+    <table>
+      <tr>
+        <th>產品</th>
+        <th>特色</th>
+        <th>價格</th>
+      </tr>
+      <tr>
+        <td>高效能筆電</td>
+        <td>16GB RAM / RTX 顯示卡</td>
+        <td>$35,000</td>
+      </tr>
+      <tr>
+        <td>旗艦智慧手機</td>
+        <td>5G / 四鏡頭拍攝</td>
+        <td>$28,000</td>
+      </tr>
+      <tr>
+        <td>無線耳機</td>
+        <td>降噪 / 24小時續航</td>
+        <td>$4,500</td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- 關於我們 -->
+  <section id="about">
+    <h2>關於我們</h2>
+    <p>我們致力於提供最專業的 3C 產品與服務，讓顧客享受最新科技的便利與樂趣。</p>
+    <img src="https://via.placeholder.com/600x250" alt="Team" style="border-radius:10px;">
+  </section>
+
+  <!-- 聯絡我們 -->
+  <section id="contact">
+    <h2>聯絡我們</h2>
+    <p>Email: service@3cstore.com</p>
+    <p>電話: (02) 1234-5678</p>
+    <form style="margin:20px auto; width:60%; text-align:left;">
+      <label>姓名：</label><br>
+      <input type="text" style="width:100%; padding:10px; margin-bottom:10px;"><br>
+      <label>Email：</label><br>
+      <input type="email" style="width:100%; padding:10px; margin-bottom:10px;"><br>
+      <label>留言：</label><br>
+      <textarea style="width:100%; padding:10px; height:100px;"></textarea><br><br>
+      <button type="submit">送出</button>
+    </form>
+  </section>
+
+  <footer>
+    © 2025 3C 專門店 | 保留所有權利
+  </footer>
+
+  <script>
+    const navLinks = document.querySelectorAll("nav a");
+    const sections = document.querySelectorAll("section");
+
+    navLinks.forEach(link => {
+      link.addEventListener("click", () => {
+        const page = link.getAttribute("data-page");
+
+        // 隱藏所有分頁
+        sections.forEach(sec => {
+          sec.classList.remove("active");
+        });
+
+        // 顯示選中的分頁
+        document.getElementById(page).classList.add("active");
+      });
+    });
+  </script>
+</body>
+</html>
