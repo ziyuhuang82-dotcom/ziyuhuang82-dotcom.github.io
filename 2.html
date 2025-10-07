@@ -1,206 +1,284 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
+<!doctype html>
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <title>3C 專門店</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>水果購物網站</title>
   <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background-color: #000;
-      color: #eee;
-      line-height: 1.6;
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --accent:#27ae60;
+      --muted:#65707a;
+      --glass: rgba(255,255,255,0.6);
+      font-size: 16px;
     }
-    header {
-      background: #111;
-      padding: 20px;
-      text-align: center;
-      font-size: 24px;
-      letter-spacing: 2px;
-      border-bottom: 2px solid #444;
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial;
+      background:linear-gradient(180deg,#f6f7fb 0%, #eef3f8 100%);
+      color:#14202b;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:24px;
     }
-    nav {
-      display: flex;
-      justify-content: center;
-      background: #222;
+
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      max-width:1100px;margin:0 auto 24px;padding:12px 16px;background:var(--card);border-radius:12px;box-shadow:0 6px 18px rgba(16,24,40,0.06);
     }
-    nav a {
-      color: #eee;
-      padding: 14px 20px;
-      text-decoration: none;
-      transition: 0.3s;
-      cursor: pointer;
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#ffd6a5,#ff9a9e);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px}
+    .brand h1{margin:0;font-size:1.1rem}
+    .search{flex:1;margin-left:12px}
+    .search input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #e5e7eb;font-size:0.95rem}
+
+    main{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 320px;gap:20px}
+
+    /* 左側 - 商品區 */
+    .shop{
+      background:transparent;padding:6px;display:flex;flex-direction:column;gap:16px
     }
-    nav a:hover {
-      background: #444;
-      color: #fff;
+    .controls{display:flex;gap:8px;align-items:center}
+    .category{padding:8px 12px;border-radius:999px;background:var(--card);box-shadow:0 4px 10px rgba(16,24,40,0.04)}
+
+    .grid{
+      display:grid;grid-template-columns:repeat(auto-fill, minmax(200px,1fr));gap:16px
     }
-    section {
-      display: none;
-      padding: 40px;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.8s;
+    .card{
+      background:var(--card);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;box-shadow:0 8px 20px rgba(16,24,40,0.05);
     }
-    section.active {
-      display: block;
-      opacity: 1;
-    }
-    footer {
-      background: #111;
-      padding: 20px;
-      text-align: center;
-      border-top: 2px solid #444;
-      font-size: 14px;
-    }
-    table {
-      margin: 20px auto;
-      border-collapse: collapse;
-      width: 80%;
-    }
-    th, td {
-      border: 1px solid #666;
-      padding: 12px;
-      text-align: center;
-    }
-    th {
-      background: #222;
-    }
-    .product-card {
-      display: inline-block;
-      background: #111;
-      margin: 20px;
-      padding: 20px;
-      border-radius: 12px;
-      transition: transform 0.3s;
-      width: 200px;
-    }
-    .product-card:hover {
-      transform: scale(1.05);
-      background: #1c1c1c;
-    }
-    .product-card img {
-      width: 100%;
-      border-radius: 8px;
-    }
-    button {
-      padding: 10px 20px;
-      background: #444;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background: #666;
+    .thumb{width:100%;display:flex;align-items:center;justify-content:center;padding:8px;border-radius:10px;background:linear-gradient(180deg,#fff 0%, #fbfcff 100%)}
+    .thumb img{width:86px;height:86px;object-fit:cover;border-radius:10px}
+
+    .meta{display:flex;align-items:center;justify-content:space-between;width:100%}
+    .name{font-weight:600}
+    .price{font-weight:700;color:var(--accent)}
+
+    .actions{display:flex;gap:8px;width:100%;align-items:center}
+    .qty{display:flex;align-items:center;border-radius:8px;background:#f3f6f9;padding:6px}
+    .qty button{background:transparent;border:0;padding:6px 10px;font-size:1rem;cursor:pointer}
+    .add{margin-left:auto;padding:8px 12px;border-radius:8px;border:0;background:var(--accent);color:white;cursor:pointer}
+
+    /* 右側 - 購物車 */
+    .cart-wrap{background:var(--card);border-radius:12px;padding:16px;height:fit-content;box-shadow:0 10px 30px rgba(16,24,40,0.06)}
+    .cart-head{display:flex;align-items:center;justify-content:space-between}
+    .cart-items{margin-top:12px;display:flex;flex-direction:column;gap:12px;min-height:80px}
+    .cart-item{display:flex;gap:10px;align-items:center}
+    .cart-item img{width:54px;height:54px;border-radius:8px}
+    .cart-item .info{flex:1}
+    .cart-item .remove{background:transparent;border:0;color:#c0392b;cursor:pointer}
+
+    .total{display:flex;align-items:center;justify-content:space-between;font-weight:700;margin-top:12px}
+    .checkout{width:100%;margin-top:12px;padding:10px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#2ecc71);border:0;color:white;font-weight:700;cursor:pointer}
+
+    footer{max-width:1100px;margin:24px auto 0;text-align:center;color:var(--muted)}
+
+    @media (max-width:900px){
+      main{grid-template-columns:1fr}
+      .cart-wrap{position:sticky;top:84px}
     }
   </style>
 </head>
 <body>
-  <header>3C 專門店</header>
-  <nav>
-    <a data-page="home">首頁</a>
-    <a data-page="products">產品</a>
-    <a data-page="about">關於我們</a>
-    <a data-page="contact">聯絡我們</a>
-  </nav>
-
-  <!-- 首頁 -->
-  <section id="home" class="active">
-    <h1>歡迎來到 3C 專門店</h1>
-    <p>最新科技、專業服務，盡在這裡。</p>
-    <img src="https://via.placeholder.com/800x300" alt="Banner" style="border-radius:10px;">
-  </section>
-
-  <!-- 產品頁 -->
-  <section id="products">
-    <h2>熱門產品</h2>
-    <div class="product-card">
-      <img src="https://via.placeholder.com/200" alt="Laptop">
-      <h3>高效能筆電</h3>
-      <p>$35,000</p>
+  <header>
+    <div class="brand">
+      <div class="logo">果</div>
+      <div>
+        <h1>水果小舖</h1>
+        <div style="color:var(--muted);font-size:0.9rem">新鮮直送 • 當季好物</div>
+      </div>
     </div>
-    <div class="product-card">
-      <img src="https://via.placeholder.com/200" alt="Smartphone">
-      <h3>旗艦智慧手機</h3>
-      <p>$28,000</p>
+    <div class="search">
+      <input id="searchInput" placeholder="搜尋水果、價格或類別（例如：蘋果、香蕉）" />
     </div>
-    <div class="product-card">
-      <img src="https://via.placeholder.com/200" alt="Headphones">
-      <h3>無線耳機</h3>
-      <p>$4,500</p>
+    <div style="width:40px;text-align:right">
+      <button id="toggleCart" title="購物車">🛒</button>
     </div>
+  </header>
 
-    <h2>產品比較表</h2>
-    <table>
-      <tr>
-        <th>產品</th>
-        <th>特色</th>
-        <th>價格</th>
-      </tr>
-      <tr>
-        <td>高效能筆電</td>
-        <td>16GB RAM / RTX 顯示卡</td>
-        <td>$35,000</td>
-      </tr>
-      <tr>
-        <td>旗艦智慧手機</td>
-        <td>5G / 四鏡頭拍攝</td>
-        <td>$28,000</td>
-      </tr>
-      <tr>
-        <td>無線耳機</td>
-        <td>降噪 / 24小時續航</td>
-        <td>$4,500</td>
-      </tr>
-    </table>
-  </section>
+  <main>
+    <section class="shop">
+      <div class="controls">
+        <div class="category">全部商品</div>
+        <div style="color:var(--muted);margin-left:auto">共 <span id="productCount">0</span> 項</div>
+      </div>
 
-  <!-- 關於我們 -->
-  <section id="about">
-    <h2>關於我們</h2>
-    <p>我們致力於提供最專業的 3C 產品與服務，讓顧客享受最新科技的便利與樂趣。</p>
-    <img src="https://via.placeholder.com/600x250" alt="Team" style="border-radius:10px;">
-  </section>
+      <div class="grid" id="productGrid">
+        <!-- 商品卡片由 JS 生成 -->
+      </div>
+    </section>
 
-  <!-- 聯絡我們 -->
-  <section id="contact">
-    <h2>聯絡我們</h2>
-    <p>Email: service@3cstore.com</p>
-    <p>電話: (02) 1234-5678</p>
-    <form style="margin:20px auto; width:60%; text-align:left;">
-      <label>姓名：</label><br>
-      <input type="text" style="width:100%; padding:10px; margin-bottom:10px;"><br>
-      <label>Email：</label><br>
-      <input type="email" style="width:100%; padding:10px; margin-bottom:10px;"><br>
-      <label>留言：</label><br>
-      <textarea style="width:100%; padding:10px; height:100px;"></textarea><br><br>
-      <button type="submit">送出</button>
-    </form>
-  </section>
+    <aside class="cart-wrap" id="cartWrap">
+      <div class="cart-head">
+        <div style="font-weight:700">購物車</div>
+        <div style="color:var(--muted);font-size:0.9rem">快速結帳</div>
+      </div>
 
-  <footer>
-    © 2025 3C 專門店 | 保留所有權利
-  </footer>
+      <div class="cart-items" id="cartItems">
+        <div style="color:var(--muted)">目前購物車為空。</div>
+      </div>
+
+      <div class="total">
+        <div>合計</div>
+        <div id="cartTotal">NT$0</div>
+      </div>
+      <button class="checkout" id="checkoutBtn">前往結帳</button>
+    </aside>
+  </main>
+
+  <footer>© 水果小舖 — 範例網站  •  可用於學校專題或練習</footer>
 
   <script>
-    const navLinks = document.querySelectorAll("nav a");
-    const sections = document.querySelectorAll("section");
+    const products = [
+      {id:1,name:'台灣青蘋果',price:65,img:'https://images.unsplash.com/photo-1571689933887-1b8d3e2a6b1f?auto=format&fit=crop&w=400&q=60'},
+      {id:2,name:'甜香香蕉',price:45,img:'https://images.unsplash.com/photo-1574226516831-e1dff420e8f8?auto=format&fit=crop&w=400&q=60'},
+      {id:3,name:'多汁橙子',price:80,img:'https://images.unsplash.com/photo-1517731723590-6d718bcd1f8b?auto=format&fit=crop&w=400&q=60'},
+      {id:4,name:'櫻桃 (小盒)',price:150,img:'https://images.unsplash.com/photo-1502741126161-b048400d6b6a?auto=format&fit=crop&w=400&q=60'},
+      {id:5,name:'芒果（夏季）',price:120,img:'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=400&q=60'},
+      {id:6,name:'奇異果',price:90,img:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=60'}
+    ];
 
-    navLinks.forEach(link => {
-      link.addEventListener("click", () => {
-        const page = link.getAttribute("data-page");
+    const productGrid = document.getElementById('productGrid');
+    const productCount = document.getElementById('productCount');
+    const searchInput = document.getElementById('searchInput');
+    const cartItemsEl = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const toggleCartBtn = document.getElementById('toggleCart');
+    const cartWrap = document.getElementById('cartWrap');
 
-        // 隱藏所有分頁
-        sections.forEach(sec => {
-          sec.classList.remove("active");
-        });
+    let cart = {};
 
-        // 顯示選中的分頁
-        document.getElementById(page).classList.add("active");
+    function formatMoney(n){ return 'NT$' + Number(n).toLocaleString(); }
+
+    function renderProducts(list){
+      productGrid.innerHTML = '';
+      list.forEach(p=>{
+        const card = document.createElement('div'); card.className='card';
+
+        card.innerHTML = `
+          <div class="thumb"><img src="${p.img}" alt="${p.name}" loading="lazy"></div>
+          <div class="meta">
+            <div class="name">${p.name}</div>
+            <div class="price">${formatMoney(p.price)}</div>
+          </div>
+          <div class="actions">
+            <div class="qty" data-id="${p.id}">
+              <button class="dec">-</button>
+              <div class="val">1</div>
+              <button class="inc">+</button>
+            </div>
+            <button class="add" data-id="${p.id}">加入購物車</button>
+          </div>
+        `;
+
+        productGrid.appendChild(card);
       });
+      productCount.textContent = list.length;
+    }
+
+    // 初次顯示所有商品
+    renderProducts(products);
+
+    // 數量控制 & 加入購物車事件代理
+    productGrid.addEventListener('click', e=>{
+      const inc = e.target.closest('.inc');
+      const dec = e.target.closest('.dec');
+      const add = e.target.closest('.add');
+      if(inc||dec){
+        const wrap = (inc||dec).closest('.qty');
+        const valEl = wrap.querySelector('.val');
+        let val = parseInt(valEl.textContent,10);
+        if(inc) val++; else val = Math.max(1, val-1);
+        valEl.textContent = val;
+      }
+      if(add){
+        const id = Number(add.dataset.id);
+        const wrap = add.closest('.card').querySelector('.qty');
+        const qty = Number(wrap.querySelector('.val').textContent);
+        addToCart(id, qty);
+      }
     });
+
+    // 搜尋
+    searchInput.addEventListener('input', ()=>{
+      const q = searchInput.value.trim().toLowerCase();
+      const filtered = products.filter(p=> (p.name + ' ' + p.price).toLowerCase().includes(q));
+      renderProducts(filtered);
+    });
+
+    function addToCart(id, qty=1){
+      const prod = products.find(p=>p.id===id);
+      if(!prod) return;
+      if(cart[id]) cart[id].qty += qty; else cart[id] = { ...prod, qty };
+      renderCart();
+      flashCart();
+    }
+
+    function renderCart(){
+      cartItemsEl.innerHTML = '';
+      const keys = Object.keys(cart);
+      if(keys.length===0){ cartItemsEl.innerHTML = '<div style="color:var(--muted)">目前購物車為空。</div>'; cartTotalEl.textContent='NT$0'; return; }
+      let total = 0;
+      keys.forEach(k=>{
+        const item = cart[k];
+        total += item.price * item.qty;
+        const div = document.createElement('div'); div.className='cart-item';
+        div.innerHTML = `
+          <img src="${item.img}" alt="${item.name}">
+          <div class="info">
+            <div style="font-weight:600">${item.name}</div>
+            <div style="color:var(--muted);font-size:0.9rem">${item.qty} × ${formatMoney(item.price)}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-weight:700">${formatMoney(item.price * item.qty)}</div>
+            <button class="remove" data-id="${item.id}">移除</button>
+          </div>
+        `;
+        cartItemsEl.appendChild(div);
+      });
+      cartTotalEl.textContent = formatMoney(total);
+    }
+
+    // cart 事件代理 (移除)
+    cartItemsEl.addEventListener('click', e=>{
+      const rm = e.target.closest('.remove');
+      if(rm){
+        const id = Number(rm.dataset.id);
+        delete cart[id];
+        renderCart();
+      }
+    });
+
+    // checkout
+    checkoutBtn.addEventListener('click', ()=>{
+      const keys = Object.keys(cart);
+      if(keys.length===0){ alert('購物車是空的，請先加入商品。'); return; }
+      let summary = '訂單明細:\n';
+      let total = 0;
+      keys.forEach(k=>{ const it = cart[k]; summary += `${it.name} × ${it.qty} = ${formatMoney(it.qty*it.price)}\n`; total += it.qty*it.price; });
+      summary += `合計：${formatMoney(total)}\n\n（此為範例網站，未串接付款）`;
+      alert(summary);
+    });
+
+    // toggle cart (小功能：滑動顯示/隱藏右側)
+    toggleCartBtn.addEventListener('click', ()=>{
+      if(cartWrap.style.transform === 'translateX(8px)'){
+        cartWrap.style.transform = '';
+        cartWrap.style.transition = 'transform .28s ease';
+      } else {
+        cartWrap.style.transform = 'translateX(8px)';
+        cartWrap.style.transition = 'transform .28s ease';
+      }
+    });
+
+    function flashCart(){
+      toggleCartBtn.animate([{transform:'scale(1)'},{transform:'scale(1.18)'},{transform:'scale(1)'}],{duration:320});
+    }
+
+    // 最初渲染
+    renderCart();
   </script>
 </body>
 </html>
